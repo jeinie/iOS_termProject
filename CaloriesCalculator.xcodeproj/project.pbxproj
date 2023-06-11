@@ -18,7 +18,6 @@
 		12B95FF22A2DD9A000D739BA /* CaloriesCalculatorUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B95FF12A2DD9A000D739BA /* CaloriesCalculatorUITestsLaunchTests.swift */; };
 		12B960002A2DE4F900D739BA /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 12B95FFF2A2DE4F900D739BA /* FSCalendar */; };
 		12B960022A2DF0EE00D739BA /* CaloriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B960012A2DF0EE00D739BA /* CaloriesViewController.swift */; };
-		12EDE3E52A2F353500ACA06C /* JJFloatingActionButton in Frameworks */ = {isa = PBXBuildFile; productRef = 12EDE3E42A2F353500ACA06C /* JJFloatingActionButton */; };
 		12EDE3E72A2F37CF00ACA06C /* AddCalorieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EDE3E62A2F37CF00ACA06C /* AddCalorieViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -62,7 +61,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				12EDE3E52A2F353500ACA06C /* JJFloatingActionButton in Frameworks */,
 				12B960002A2DE4F900D739BA /* FSCalendar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -155,7 +153,6 @@
 			name = CaloriesCalculator;
 			packageProductDependencies = (
 				12B95FFF2A2DE4F900D739BA /* FSCalendar */,
-				12EDE3E42A2F353500ACA06C /* JJFloatingActionButton */,
 			);
 			productName = CaloriesCalculator;
 			productReference = 12B95FCB2A2DD99F00D739BA /* CaloriesCalculator.app */;
@@ -231,7 +228,6 @@
 			mainGroup = 12B95FC22A2DD99F00D739BA;
 			packageReferences = (
 				12B95FFE2A2DE4F900D739BA /* XCRemoteSwiftPackageReference "FSCalendar" */,
-				12EDE3E32A2F353500ACA06C /* XCRemoteSwiftPackageReference "JJFloatingActionButton" */,
 			);
 			productRefGroup = 12B95FCC2A2DD99F00D739BA /* Products */;
 			projectDirPath = "";
@@ -626,14 +622,6 @@
 				kind = branch;
 			};
 		};
-		12EDE3E32A2F353500ACA06C /* XCRemoteSwiftPackageReference "JJFloatingActionButton" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/jjochen/JJFloatingActionButton.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -641,11 +629,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 12B95FFE2A2DE4F900D739BA /* XCRemoteSwiftPackageReference "FSCalendar" */;
 			productName = FSCalendar;
-		};
-		12EDE3E42A2F353500ACA06C /* JJFloatingActionButton */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 12EDE3E32A2F353500ACA06C /* XCRemoteSwiftPackageReference "JJFloatingActionButton" */;
-			productName = JJFloatingActionButton;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -7,7 +7,6 @@
 
 import UIKit
 import FSCalendar
-//import JJFloatingActionButton
 
 class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendarDelegate {
 
@@ -16,11 +15,13 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
     @IBOutlet weak var fsCalendar: FSCalendar!
     @IBOutlet weak var calorieList: UITableView!
     
+    private var animation: UIViewPropertyAnimator?
+
     private lazy var floatingButton: UIButton = {
         let addBtn = UIButton()
         var config = UIButton.Configuration.filled()
         
-        config.baseBackgroundColor = .blue
+        config.baseBackgroundColor = .systemMint
         config.cornerStyle = .capsule
         config.image = UIImage(systemName: "plus")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .medium))
 
@@ -31,14 +32,54 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
         return addBtn
     }()
 
+    // 아침, 점심, 저녁으로 섭취한 칼로리 각각 나눠서 추가 버튼 만들기
+    // 아침 버튼
     private let morningBtn: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         var config = UIButton.Configuration.filled()
 
         config.baseBackgroundColor = .white
+        config.baseForegroundColor = .red
         config.cornerStyle = .capsule
-        config.image = UIImage(systemName: "sun")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .medium))
+        config.image = UIImage(systemName: "sun.and.horizon.fill")?
+            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .medium))
+        
+        button.configuration = config
+        button.layer.shadowRadius = 10
+        button.layer.shadowOpacity = 0.3
+        button.alpha = 0.0
+        return button
+    }()
+    
+    // 점심 버튼
+    private let lunchBtn: UIButton = {
+        let button = UIButton(type: .system)
+        var config = UIButton.Configuration.filled()
 
+        config.baseBackgroundColor = .blue
+        config.baseForegroundColor = .white
+        config.cornerStyle = .capsule
+        config.image = UIImage(systemName: "sun.max.fill")?
+            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .medium))
+        
+        button.configuration = config
+        button.layer.shadowRadius = 10
+        button.layer.shadowOpacity = 0.3
+        button.alpha = 0.0
+        return button
+    }()
+    
+    // 저녁 버튼
+    private let dinnerBtn: UIButton = {
+        let button = UIButton(type: .system)
+        var config = UIButton.Configuration.filled()
+
+        config.baseBackgroundColor = .gray
+        config.baseForegroundColor = .yellow
+        config.cornerStyle = .capsule
+        config.image = UIImage(systemName: "moon.stars")?
+            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .medium))
+        
         button.configuration = config
         button.layer.shadowRadius = 10
         button.layer.shadowOpacity = 0.3
@@ -56,7 +97,6 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
         }
     }
 
-    private var animation: UIViewPropertyAnimator?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,13 +109,17 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         floatingButton.frame = CGRect(x: view.frame.size.width - 60 - 8 - 20, y: view.frame.size.height - 60 - 8 - 40, width: 60, height: 60)
-        morningBtn.frame = CGRect(x: view.frame.size.width - 60 - 8 - 20, y: view.frame.size.height - 60 - 80 - 8 - 40, width: 60, height: 60)
+        morningBtn.frame = CGRect(x: view.frame.size.width - 60 - 8 - 20, y: view.frame.size.height - 60 - 240 - 8 - 40, width: 60, height: 60)
+        lunchBtn.frame = CGRect(x: view.frame.size.width - 60 - 8 - 20, y: view.frame.size.height - 60 - 160 - 8 - 40, width: 60, height: 60)
+        dinnerBtn.frame = CGRect(x: view.frame.size.width - 60 - 8 - 20, y: view.frame.size.height - 60 - 80 - 8 - 40, width: 60, height: 60)
     }
 
     private func setUI() {
         view.backgroundColor = .systemBackground
-        view.addSubview(floatingButton)
-        view.addSubview(morningBtn)
+        view.addSubview(floatingButton) // add 버튼
+        view.addSubview(morningBtn) // 아침에 섭취한 칼로리 추가 버튼
+        view.addSubview(lunchBtn) // 점심에 섭취한 칼로리 추가 버튼
+        view.addSubview(dinnerBtn) // 저녁에 섭취한 칼로리 추가 버튼
     }
 
 
@@ -91,12 +135,24 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
                 guard let self = self else { return }
                 self.morningBtn.layer.transform = CATransform3DIdentity
                 self.morningBtn.alpha = 1.0
+                
+                self.lunchBtn.layer.transform = CATransform3DMakeScale(0.4, 0.4, 1)
+                self.lunchBtn.layer.transform = CATransform3DIdentity
+                self.lunchBtn.alpha = 1.0
+                
+                self.dinnerBtn.layer.transform = CATransform3DMakeScale(0.4, 0.4, 1)
+                self.dinnerBtn.layer.transform = CATransform3DIdentity
+                self.dinnerBtn.alpha = 1.0
             })
         } else {
             UIView.animate(withDuration: 0.15, delay: 0.2, options: []) { [weak self] in
                 guard let self = self else { return }
                 self.morningBtn.layer.transform = CATransform3DMakeScale(0.4, 0.4, 0.1)
                 self.morningBtn.alpha = 0.0
+                self.lunchBtn.layer.transform = CATransform3DMakeScale(0.4, 0.4, 0.1)
+                self.lunchBtn.alpha = 0.0
+                self.dinnerBtn.layer.transform = CATransform3DMakeScale(0.4, 0.4, 0.1)
+                self.dinnerBtn.alpha = 0.0
             }
         }
     }
