@@ -13,9 +13,21 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
     @IBOutlet weak var calorieConsumption: UILabel!
     @IBOutlet weak var targetCalorie: UILabel!
     @IBOutlet weak var fsCalendar: FSCalendar!
-    @IBOutlet weak var calorieList: UITableView!
+    @IBOutlet weak var caloriesTableView: UITableView!
     
     private var animation: UIViewPropertyAnimator?
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        fsCalendar.dataSource = self
+        fsCalendar.delegate = self
+        
+        setUI() // 플로팅 버튼 세팅
+        
+        morningBtn.addTarget(self, action: #selector(morningBtnTapped), for: .touchUpInside)
+        lunchBtn.addTarget(self, action: #selector(lunchBtnTapped), for: .touchUpInside)
+        dinnerBtn.addTarget(self, action: #selector(dinnerBtnTapped), for: .touchUpInside)
+    }
 
     private lazy var floatingButton: UIButton = {
         let addBtn = UIButton()
@@ -86,6 +98,21 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
         button.alpha = 0.0
         return button
     }()
+    
+    @objc private func morningBtnTapped() {
+        print("아침 버튼 눌림")
+        performSegue(withIdentifier: "AddCalories", sender: self)
+    }
+    
+    @objc private func lunchBtnTapped() {
+        print("점심 버튼 눌림")
+        performSegue(withIdentifier: "AddCalories", sender: self)
+    }
+    
+    @objc private func dinnerBtnTapped() {
+        print("저녁 버튼 눌림")
+        performSegue(withIdentifier: "AddCalories", sender: self)
+    }
 
     @objc private func tapFloatingBtn() {
         isActive.toggle()
@@ -98,13 +125,6 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
     }
 
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setUI()
-
-        fsCalendar.dataSource = self
-        fsCalendar.delegate = self
-    }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -132,6 +152,7 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
         if isActive {
             morningBtn.layer.transform = CATransform3DMakeScale(0.4, 0.4, 1)
             UIView.animate(withDuration: 0.3, delay: 0.2, usingSpringWithDamping: 0.55, initialSpringVelocity: 0.3, options: [.curveEaseInOut], animations: { [weak self] in
+                
                 guard let self = self else { return }
                 self.morningBtn.layer.transform = CATransform3DIdentity
                 self.morningBtn.alpha = 1.0
@@ -159,15 +180,22 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
 
     private func rotateFloatingButton() {
         let animation = CABasicAnimation(keyPath: "transform.rotation.z")
-                let fromValue = isActive ? 0 : CGFloat.pi / 4
-                let toValue = isActive ? CGFloat.pi / 4 : 0
-                animation.fromValue = fromValue
-                animation.toValue = toValue
-                animation.duration = 0.3
-                animation.fillMode = .forwards
-                animation.isRemovedOnCompletion = false
-                floatingButton.layer.add(animation, forKey: nil)
+        let fromValue = isActive ? 0 : CGFloat.pi / 4
+        let toValue = isActive ? CGFloat.pi / 4 : 0
+        animation.fromValue = fromValue
+        animation.toValue = toValue
+        animation.duration = 0.3
+        animation.fillMode = .forwards
+        animation.isRemovedOnCompletion = false
+        floatingButton.layer.add(animation, forKey: nil)
     }    
     
 }
 
+//extension CaloriesViewController {
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "AddCalories" {
+//
+//        }
+//    }
+//}

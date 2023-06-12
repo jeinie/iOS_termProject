@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vO6-xb-wIY">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -14,11 +14,11 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="CaloriesViewController" customModule="CaloriesCalculator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ir0-NG-igx">
-                                <rect key="frame" x="16" y="0.0" width="361" height="842"/>
+                                <rect key="frame" x="16" y="103" width="361" height="715"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="HJk-Vn-LU5">
                                         <rect key="frame" x="0.0" y="0.0" width="361" height="48"/>
@@ -60,11 +60,11 @@
                                         </constraints>
                                     </stackView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hgo-cN-6ej" customClass="FSCalendar">
-                                        <rect key="frame" x="0.0" y="56" width="361" height="417"/>
+                                        <rect key="frame" x="0.0" y="56" width="361" height="290"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Lc6-Dw-jVA">
-                                        <rect key="frame" x="0.0" y="481" width="361" height="361"/>
+                                        <rect key="frame" x="0.0" y="354" width="361" height="361"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </tableView>
                                 </subviews>
@@ -89,23 +89,23 @@
                         <outlet property="calorieList" destination="Lc6-Dw-jVA" id="6kg-cL-Pe7"/>
                         <outlet property="fsCalendar" destination="Hgo-cN-6ej" id="q1G-df-V5q"/>
                         <outlet property="targetCalorie" destination="0Q7-4d-Hqw" id="TC6-n2-VnO"/>
-                        <segue destination="cEf-bR-977" kind="show" id="Nyb-ck-CBP"/>
+                        <segue destination="cEf-bR-977" kind="show" identifier="AddCalories" id="Nyb-ck-CBP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1039" y="56"/>
+            <point key="canvasLocation" x="1965.6488549618321" y="55.633802816901408"/>
         </scene>
         <!--Add Calorie View Controller-->
         <scene sceneID="FdG-p7-RbC">
             <objects>
                 <viewController storyboardIdentifier="AddCalorieViewController" id="cEf-bR-977" customClass="AddCalorieViewController" customModule="CaloriesCalculator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zsy-wh-XPM">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="넘어왔어용" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2AH-Ez-NdU">
-                                <rect key="frame" x="175" y="416" width="74" height="21"/>
+                                <rect key="frame" x="159" y="411" width="74" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -116,28 +116,31 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="Zno-Dw-lpn"/>
+                    <connections>
+                        <outlet property="time" destination="2AH-Ez-NdU" id="DGN-Mz-ALj"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kwa-gQ-MLa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1772" y="56"/>
+            <point key="canvasLocation" x="2843.5114503816794" y="55.633802816901408"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="4VG-N8-pZO">
+        <scene sceneID="t5q-P9-qt7">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="pt5-xK-jZv" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="vO6-xb-wIY" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="533-lI-qqH">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="VD2-a1-74l">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="show" id="sAW-M2-1bh"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="5yW-Rw-tzp"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ReM-i8-Q46" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BDU-fO-pOz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="34" y="30"/>
+            <point key="canvasLocation" x="1038.9312977099237" y="55.633802816901408"/>
         </scene>
     </scenes>
     <resources>
