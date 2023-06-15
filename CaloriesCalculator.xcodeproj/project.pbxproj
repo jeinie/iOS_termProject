@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		12B95FCF2A2DD99F00D739BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B95FCE2A2DD99F00D739BA /* AppDelegate.swift */; };
 		12B95FD12A2DD99F00D739BA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B95FD02A2DD99F00D739BA /* SceneDelegate.swift */; };
-		12B95FD32A2DD99F00D739BA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B95FD22A2DD99F00D739BA /* ViewController.swift */; };
 		12B95FD62A2DD99F00D739BA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12B95FD42A2DD99F00D739BA /* Main.storyboard */; };
 		12B95FD82A2DD9A000D739BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12B95FD72A2DD9A000D739BA /* Assets.xcassets */; };
 		12B95FDB2A2DD9A000D739BA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12B95FD92A2DD9A000D739BA /* LaunchScreen.storyboard */; };
@@ -42,7 +41,6 @@
 		12B95FCB2A2DD99F00D739BA /* CaloriesCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CaloriesCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12B95FCE2A2DD99F00D739BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		12B95FD02A2DD99F00D739BA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		12B95FD22A2DD99F00D739BA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		12B95FD52A2DD99F00D739BA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		12B95FD72A2DD9A000D739BA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12B95FDA2A2DD9A000D739BA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -107,7 +105,6 @@
 			children = (
 				12B95FCE2A2DD99F00D739BA /* AppDelegate.swift */,
 				12B95FD02A2DD99F00D739BA /* SceneDelegate.swift */,
-				12B95FD22A2DD99F00D739BA /* ViewController.swift */,
 				12B95FD42A2DD99F00D739BA /* Main.storyboard */,
 				12EDE3E62A2F37CF00ACA06C /* AddCalorieViewController.swift */,
 				12B95FD72A2DD9A000D739BA /* Assets.xcassets */,
@@ -273,7 +270,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				12B960022A2DF0EE00D739BA /* CaloriesViewController.swift in Sources */,
-				12B95FD32A2DD99F00D739BA /* ViewController.swift in Sources */,
 				12B95FCF2A2DD99F00D739BA /* AppDelegate.swift in Sources */,
 				12B95FD12A2DD99F00D739BA /* SceneDelegate.swift in Sources */,
 				12EDE3E72A2F37CF00ACA06C /* AddCalorieViewController.swift in Sources */,
