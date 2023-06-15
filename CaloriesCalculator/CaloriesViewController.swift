@@ -13,10 +13,10 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
     @IBOutlet weak var calorieConsumption: UILabel!
     @IBOutlet weak var targetCalorie: UILabel!
     @IBOutlet weak var fsCalendar: FSCalendar!
-    @IBOutlet weak var caloriesTableView: UITableView!
+    @IBOutlet weak var caloriesList: UITableView!
     
     private var animation: UIViewPropertyAnimator?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         fsCalendar.dataSource = self
@@ -101,17 +101,17 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
     
     @objc private func morningBtnTapped() {
         print("아침 버튼 눌림")
-        performSegue(withIdentifier: "AddCalories", sender: self)
+        performSegue(withIdentifier: "AddCalories", sender: "아침")
     }
     
     @objc private func lunchBtnTapped() {
         print("점심 버튼 눌림")
-        performSegue(withIdentifier: "AddCalories", sender: self)
+        performSegue(withIdentifier: "AddCalories", sender: "점심")
     }
     
     @objc private func dinnerBtnTapped() {
         print("저녁 버튼 눌림")
-        performSegue(withIdentifier: "AddCalories", sender: self)
+        performSegue(withIdentifier: "AddCalories", sender: "저녁")
     }
 
     @objc private func tapFloatingBtn() {
@@ -123,8 +123,6 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
             showActionButtons()
         }
     }
-
-
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -192,10 +190,14 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
     
 }
 
-//extension CaloriesViewController {
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "AddCalories" {
-//
-//        }
-//    }
-//}
+extension CaloriesViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "AddCalories" {
+            if let destinationVC = segue.destination as? AddCalorieViewController {
+                if let data = sender as? String {
+                    destinationVC.title = data
+                }
+            }
+        }
+    }
+}

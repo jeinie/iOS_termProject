@@ -86,7 +86,7 @@
                     <navigationItem key="navigationItem" id="Zno-6m-wBa"/>
                     <connections>
                         <outlet property="calorieConsumption" destination="Pf5-ET-sA9" id="CFW-2r-VzY"/>
-                        <outlet property="calorieList" destination="Lc6-Dw-jVA" id="6kg-cL-Pe7"/>
+                        <outlet property="caloriesList" destination="Lc6-Dw-jVA" id="2Uz-mF-Os0"/>
                         <outlet property="fsCalendar" destination="Hgo-cN-6ej" id="q1G-df-V5q"/>
                         <outlet property="targetCalorie" destination="0Q7-4d-Hqw" id="TC6-n2-VnO"/>
                         <segue destination="cEf-bR-977" kind="show" identifier="AddCalories" id="Nyb-ck-CBP"/>
@@ -99,25 +99,68 @@
         <!--Add Calorie View Controller-->
         <scene sceneID="FdG-p7-RbC">
             <objects>
-                <viewController storyboardIdentifier="AddCalorieViewController" id="cEf-bR-977" customClass="AddCalorieViewController" customModule="CaloriesCalculator" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="cEf-bR-977" customClass="AddCalorieViewController" customModule="CaloriesCalculator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zsy-wh-XPM">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="넘어왔어용" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2AH-Ez-NdU">
-                                <rect key="frame" x="159" y="411" width="74" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <searchBar contentMode="redraw" placeholder="찾으려는 음식을 입력해주세요" translatesAutoresizingMaskIntoConstraints="NO" id="4iN-1O-R75">
+                                <rect key="frame" x="0.0" y="103" width="393" height="56"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="cEf-bR-977" id="iyZ-TH-gTo"/>
+                                </connections>
+                            </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="k7R-gL-he6">
+                                <rect key="frame" x="0.0" y="158" width="393" height="364"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="364" id="CE9-hg-7GY"/>
+                                </constraints>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SearchCell" textLabel="q2h-qG-T4U" detailTextLabel="Mbf-aQ-Oq8" style="IBUITableViewCellStyleValue1" id="NZG-Wl-odB">
+                                        <rect key="frame" x="0.0" y="50" width="393" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="NZG-Wl-odB" id="2u3-fW-jtz">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="FoodName" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="q2h-qG-T4U">
+                                                    <rect key="frame" x="20.000000000000004" y="15" width="61.333333333333336" height="14.333333333333334"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Calorie" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Mbf-aQ-Oq8">
+                                                    <rect key="frame" x="333" y="15" width="40" height="14.333333333333334"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="HUH-7t-QND"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="k7R-gL-he6" firstAttribute="top" secondItem="4iN-1O-R75" secondAttribute="bottom" id="26K-0N-ifF"/>
+                            <constraint firstItem="k7R-gL-he6" firstAttribute="trailing" secondItem="HUH-7t-QND" secondAttribute="trailing" id="EAm-Zd-XV6"/>
+                            <constraint firstItem="4iN-1O-R75" firstAttribute="centerX" secondItem="zsy-wh-XPM" secondAttribute="centerX" id="QbB-Mw-t7j"/>
+                            <constraint firstItem="k7R-gL-he6" firstAttribute="leading" secondItem="HUH-7t-QND" secondAttribute="leading" id="aE6-1Y-4HE"/>
+                            <constraint firstItem="4iN-1O-R75" firstAttribute="top" secondItem="HUH-7t-QND" secondAttribute="top" id="eks-dh-l01"/>
+                            <constraint firstItem="4iN-1O-R75" firstAttribute="trailing" secondItem="HUH-7t-QND" secondAttribute="trailing" id="szS-GL-eCf"/>
+                            <constraint firstItem="4iN-1O-R75" firstAttribute="leading" secondItem="HUH-7t-QND" secondAttribute="leading" id="x4s-bp-8qa"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Zno-Dw-lpn"/>
                     <connections>
-                        <outlet property="time" destination="2AH-Ez-NdU" id="DGN-Mz-ALj"/>
+                        <outlet property="searchBar" destination="4iN-1O-R75" id="pAe-LQ-WMv"/>
+                        <outlet property="searchTableView" destination="k7R-gL-he6" id="2xV-Ji-yKX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kwa-gQ-MLa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
