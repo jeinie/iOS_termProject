@@ -101,17 +101,20 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
     
     @objc private func morningBtnTapped() {
         print("아침 버튼 눌림")
-        performSegue(withIdentifier: "AddCalories", sender: "아침")
+        let date = fsCalendar.selectedDate // 선택한 날짜
+        performSegue(withIdentifier: "AddCalories", sender: (date, "아침"))
     }
     
     @objc private func lunchBtnTapped() {
         print("점심 버튼 눌림")
-        performSegue(withIdentifier: "AddCalories", sender: "점심")
+        let date = fsCalendar.selectedDate // 선택한 날짜
+        performSegue(withIdentifier: "AddCalories", sender: (date, "점심"))
     }
     
     @objc private func dinnerBtnTapped() {
         print("저녁 버튼 눌림")
-        performSegue(withIdentifier: "AddCalories", sender: "저녁")
+        let date = fsCalendar.selectedDate // 선택한 날짜
+        performSegue(withIdentifier: "AddCalories", sender: (date, "저녁"))
     }
 
     @objc private func tapFloatingBtn() {
@@ -194,8 +197,10 @@ extension CaloriesViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddCalories" {
             if let destinationVC = segue.destination as? AddCalorieViewController {
-                if let data = sender as? String {
-                    destinationVC.title = data
+                if let data = sender as? (Date, String) {
+                    destinationVC.selectedDate = data.0
+                    destinationVC.title = data.1
+                    print("선택한 날짜: \(data.0)")
                 }
             }
         }

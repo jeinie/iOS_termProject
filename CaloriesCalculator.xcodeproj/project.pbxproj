@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		121F4E722A3C9948002467F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 121F4E712A3C9948002467F2 /* GoogleService-Info.plist */; };
+		121F4E752A3C9A85002467F2 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 121F4E742A3C9A85002467F2 /* FirebaseFirestore */; };
 		12B95FCF2A2DD99F00D739BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B95FCE2A2DD99F00D739BA /* AppDelegate.swift */; };
 		12B95FD12A2DD99F00D739BA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B95FD02A2DD99F00D739BA /* SceneDelegate.swift */; };
 		12B95FD62A2DD99F00D739BA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12B95FD42A2DD99F00D739BA /* Main.storyboard */; };
@@ -38,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		121F4E712A3C9948002467F2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		12B95FCB2A2DD99F00D739BA /* CaloriesCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CaloriesCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12B95FCE2A2DD99F00D739BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		12B95FD02A2DD99F00D739BA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -60,6 +63,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				12B960002A2DE4F900D739BA /* FSCalendar in Frameworks */,
+				121F4E752A3C9A85002467F2 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +114,7 @@
 				12B95FD72A2DD9A000D739BA /* Assets.xcassets */,
 				12B95FD92A2DD9A000D739BA /* LaunchScreen.storyboard */,
 				12B95FDC2A2DD9A000D739BA /* Info.plist */,
+				121F4E712A3C9948002467F2 /* GoogleService-Info.plist */,
 				12B960012A2DF0EE00D739BA /* CaloriesViewController.swift */,
 			);
 			path = CaloriesCalculator;
@@ -150,6 +155,7 @@
 			name = CaloriesCalculator;
 			packageProductDependencies = (
 				12B95FFF2A2DE4F900D739BA /* FSCalendar */,
+				121F4E742A3C9A85002467F2 /* FirebaseFirestore */,
 			);
 			productName = CaloriesCalculator;
 			productReference = 12B95FCB2A2DD99F00D739BA /* CaloriesCalculator.app */;
@@ -225,6 +231,7 @@
 			mainGroup = 12B95FC22A2DD99F00D739BA;
 			packageReferences = (
 				12B95FFE2A2DE4F900D739BA /* XCRemoteSwiftPackageReference "FSCalendar" */,
+				121F4E732A3C9A85002467F2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 12B95FCC2A2DD99F00D739BA /* Products */;
 			projectDirPath = "";
@@ -245,6 +252,7 @@
 				12B95FDB2A2DD9A000D739BA /* LaunchScreen.storyboard in Resources */,
 				12B95FD82A2DD9A000D739BA /* Assets.xcassets in Resources */,
 				12B95FD62A2DD99F00D739BA /* Main.storyboard in Resources */,
+				121F4E722A3C9948002467F2 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -610,6 +618,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		121F4E732A3C9A85002467F2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
 		12B95FFE2A2DE4F900D739BA /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/WenchaoD/FSCalendar.git";
@@ -621,6 +637,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		121F4E742A3C9A85002467F2 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 121F4E732A3C9A85002467F2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
 		12B95FFF2A2DE4F900D739BA /* FSCalendar */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 12B95FFE2A2DE4F900D739BA /* XCRemoteSwiftPackageReference "FSCalendar" */;
