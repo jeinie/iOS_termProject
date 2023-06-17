@@ -203,7 +203,9 @@ extension AddCalorieViewController {
                 }
             }
             
-            self.navigationController?.popViewController(animated: true) // 이전 화면으로 이동
+            if let calorieVC = self.storyboard?.instantiateViewController(withIdentifier: "CalorieViewController") as? CaloriesViewController {
+                self.navigationController?.pushViewController(calorieVC, animated: true)
+            }
         }))
         
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel))

@@ -7,7 +7,7 @@
 
 import UIKit
 import FSCalendar
-import Firebase
+import FirebaseFirestore
 
 class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendarDelegate, UITableViewDelegate, UITableViewDataSource {
 
@@ -40,121 +40,12 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
         morningBtn.addTarget(self, action: #selector(morningBtnTapped), for: .touchUpInside)
         lunchBtn.addTarget(self, action: #selector(lunchBtnTapped), for: .touchUpInside)
         dinnerBtn.addTarget(self, action: #selector(dinnerBtnTapped), for: .touchUpInside)
-        
-        // 앱이 실행되면 오늘 날짜의 데이터를 가져오기
-        let calendar = Calendar.current
-        let month = calendar.component(.month, from: Date())
-        let day = calendar.component(.day, from: Date())
-        
-        let formattedDate = "\(month)월 \(day)일"
-        let collectionRef = db.collection(formattedDate)
-        
-        // "아침", "점심", "저녁" 한꺼번에 가져오기
-        let query = collectionRef.whereField(FieldPath.documentID(), in: ["아침", "점심", "저녁"])
-        query.getDocuments { (snapShot, error) in
-            if let error = error {
-                print("문서 가져오기 실패: \(error)")
-                return
-            }
-            
-            guard let documents = snapShot?.documents else {
-                print("문서가 존재하지 않습니다.")
-                return
-            }
-            
-            for document in documents {
-                let documentID = document.documentID
-                let data = document.data()
-                
-                if let foods = data["foods"] as? [String], let calories = data["calories"] as? [String] {
-                    for index in 0..<foods.count {
-                        let foodName = foods[index]
-                        let calorie = calories[index]
-                        let item: [String: String] = [
-                            "food": foodName,
-                            "calorie": calorie
-                        ]
-                        if documentID == "아침" {
-                            self.morningList.append(item)
-                        } else if documentID == "점심" {
-                            self.lunchList.append(item)
-                        } else {
-                            self.dinnerList.append(item)
-                        }
-                    }
-                    print("morningList = \(self.morningList)")
-                    print("lunchList = \(self.lunchList)")
-                    print("dinnerList = \(self.morningList)")
-                }
-            }
-            
-            DispatchQueue.main.async { [weak self] in
-                self?.caloriesList.reloadData()
-            }
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // 각 리스트 초기화
-        morningList = []
-        lunchList = []
-        dinnerList = []
-        
-        print(">> 다시 옴?")
-        let calendar = Calendar.current
-        let month = calendar.component(.month, from: Date())
-        let day = calendar.component(.day, from: Date())
-        formattedDate = "\(month)월 \(day)일"
-        
-        print("선택된 날짜: \(formattedDate)")
-        let collectionRef = db.collection(formattedDate)
-        
-        // "아침", "점심", "저녁" 한꺼번에 가져오기
-        let query = collectionRef.whereField(FieldPath.documentID(), in: ["아침", "점심", "저녁"])
-        query.getDocuments { (snapShot, error) in
-            if let error = error {
-                print("문서 가져오기 실패: \(error)")
-                return
-            }
-            
-            guard let documents = snapShot?.documents else {
-                print("문서가 존재하지 않습니다.")
-                return
-            }
-            
-            for document in documents {
-                let documentID = document.documentID
-                let data = document.data()
-                
-                if let foods = data["foods"] as? [String], let calories = data["calories"] as? [String] {
-                    for index in 0..<foods.count {
-                        let foodName = foods[index]
-                        let calorie = calories[index]
-                        let item: [String: String] = [
-                            "food": foodName,
-                            "calorie": calorie
-                        ]
-                        if documentID == "아침" {
-                            self.morningList.append(item)
-                        } else if documentID == "점심" {
-                            self.lunchList.append(item)
-                        } else {
-                            self.dinnerList.append(item)
-                        }
-                    }
-                    print("morningList = \(self.morningList)")
-                    print("lunchList = \(self.lunchList)")
-                    print("dinnerList = \(self.morningList)")
-                }
-            }
-            
-            DispatchQueue.main.async { [weak self] in
-                self?.caloriesList.reloadData()
-            }
-        }
+        getCalorieList()
     }
-
     
     // 날짜 선택되었을 때 호출
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
@@ -186,9 +77,19 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
                 return
             }
             
+            var dayTotal: Double = 0
             for document in documents {
                 let documentID = document.documentID
                 let data = document.data()
+                
+                // 하루 총 칼로리 합
+                if let calorieTotal = data["calorieTotal"] as? String {
+                    let extractCalorieTotal = calorieTotal.replacingOccurrences(of: " Kcal", with: "")
+                    if let total = Double(extractCalorieTotal) {
+                        print("현재까지 칼로리 합: \(dayTotal)")
+                        dayTotal += total
+                    }
+                }
                 
                 if let foods = data["foods"] as? [String], let calories = data["calories"] as? [String] {
                     for index in 0..<foods.count {
@@ -211,6 +112,8 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
                     print("dinnerList = \(self.morningList)")
                 }
             }
+            let resDayTotal = String(format: "%.2f", dayTotal)
+            self.calorieConsumption.text = resDayTotal + " Kcal"
             
             DispatchQueue.main.async { [weak self] in
                 self?.caloriesList.reloadData()
@@ -364,7 +267,6 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
         view.addSubview(dinnerBtn) // 저녁에 섭취한 칼로리 추가 버튼
     }
 
-
     private func showActionButtons() {
         popButtons()
         rotateFloatingButton()
@@ -425,6 +327,144 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
 //}
 
 extension CaloriesViewController {
+    @IBAction func editCalorie(_ sender: UIBarButtonItem) {
+        print("edit 버튼 눌림")
+        let alertController = UIAlertController(title: "목표 칼로리", message: "목표 칼로리를 입력하세요", preferredStyle: .alert)
+        alertController.addTextField(configurationHandler: nil)
+        
+        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            if let targetCalorie = alertController.textFields?.first?.text {
+                print("목표 칼로리: \(targetCalorie)")
+                self?.targetCalorie.text = "\(targetCalorie) Kcal  "
+                
+                let data: [String: Any] = [
+                    "calorie": targetCalorie
+                ]
+                
+                // 파이어베이스에 목표 칼로리 저장
+                let documentRef = self!.db.collection("target").document("calories")
+                documentRef.getDocument{ (document, error) in
+                    if let document = document, document.exists {
+                        documentRef.updateData(["calorie": targetCalorie]) {
+                            error in
+                            if let error = error {
+                                print("목표 칼로리 수정 실패")
+                            } else {
+                                print("목표 칼로리 수정 성공")
+                            }
+                        }
+                    } else {
+                        documentRef.setData(data) { error in
+                            if let error = error {
+                                print("Firestore 목표 칼로리 추가 실패: \(error.localizedDescription)")
+                            } else {
+                                print("Firestore 목표 칼로리 추가 성공")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        let cancelAction =  UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+}
+
+extension CaloriesViewController {
+    func getCalorieList() {
+        // 각 리스트 초기화
+        morningList = []
+        lunchList = []
+        dinnerList = []
+        
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: Date())
+        let day = calendar.component(.day, from: Date())
+        formattedDate = "\(month)월 \(day)일"
+        
+        let collectionRef = db.collection(formattedDate)
+        
+        // 파이어베이스로부터 목표 칼로리 가져오기
+        let targetRef = db.collection("target").document("calories")
+
+        targetRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+//                let target = document.data().map(String.init(describing:)) ?? "nil"
+//                print(">> target Calorie: \(target["calorie"])")
+                if let calorie = document.data()?["calorie"] as? String {
+                    print("Calorie: \(calorie)")
+                    self.targetCalorie.text = "\(calorie) Kcal"
+                } else {
+                    print("해당 필드가 없거나 문자열 형태가 아님")
+                }
+            } else {
+                print("문서가 존재하지 않음")
+            }
+        }
+        
+        // "아침", "점심", "저녁" 한꺼번에 가져오기
+        let query = collectionRef.whereField(FieldPath.documentID(), in: ["아침", "점심", "저녁"])
+        query.getDocuments { (snapShot, error) in
+            if let error = error {
+                print("문서 가져오기 실패: \(error)")
+                return
+            }
+            
+            guard let documents = snapShot?.documents else {
+                print("문서가 존재하지 않습니다.")
+                return
+            }
+            
+            var dayTotal: Double = 0
+            for document in documents {
+                let documentID = document.documentID
+                let data = document.data()
+                
+                // 하루 총 칼로리 합
+                if let calorieTotal = data["calorieTotal"] as? String {
+                    let extractCalorieTotal = calorieTotal.replacingOccurrences(of: " Kcal", with: "")
+                    if let total = Double(extractCalorieTotal) {
+                        print("현재까지 칼로리 합: \(dayTotal)")
+                        dayTotal += total
+                    }
+                }
+                
+                if let foods = data["foods"] as? [String], let calories = data["calories"] as? [String] {
+                    for index in 0..<foods.count {
+                        let foodName = foods[index]
+                        let calorie = calories[index]
+                        let item: [String: String] = [
+                            "food": foodName,
+                            "calorie": calorie
+                        ]
+                        if documentID == "아침" {
+                            self.morningList.append(item)
+                        } else if documentID == "점심" {
+                            self.lunchList.append(item)
+                        } else {
+                            self.dinnerList.append(item)
+                        }
+                    }
+                    print("morningList = \(self.morningList)")
+                    print("lunchList = \(self.lunchList)")
+                    print("dinnerList = \(self.morningList)")
+                }
+            }
+            
+            let resDayTotal = String(format: "%.2f", dayTotal)
+            self.calorieConsumption.text = resDayTotal + " Kcal"
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.caloriesList.reloadData()
+            }
+        }
+    }
+}
+
+extension CaloriesViewController {
     /* 테이블 뷰 섹션 */
     func numberOfSections(in tableView: UITableView) -> Int {
         return 3 // 아침, 점심, 저녁 섹션 3개
@@ -482,5 +522,38 @@ extension CaloriesViewController {
         }
         
         return cell
+    }
+    
+    // 셀을 옆으로 스와이프하여 삭제
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        // 해당 셀의 섹션 타이틀 가져오기
+        let section = indexPath.section
+        let sectionTitle = self.tableView(tableView, titleForHeaderInSection: section)
+        
+        if sectionTitle == "아침" {
+            morningList.remove(at: indexPath.row)
+        } else if sectionTitle == "점심" {
+            lunchList.remove(at: indexPath.row)
+        } else {
+            dinnerList.remove(at: indexPath.row)
+        }
+        
+        // 파이어베이스에서 삭제
+        let documentRef = db.document("\(String(describing: formattedDate))/\(String(describing: sectionTitle))")
+
+        // 문서 삭제
+        documentRef.delete { error in
+            if let error = error {
+                print("문서 삭제 실패: \(error)")
+            } else {
+                print("문서 삭제 성공")
+            }
+        }
+        
+        if editingStyle == .delete {
+            caloriesList.deleteRows(at: [indexPath], with: .fade)
+        }
+        
+        self.caloriesList.reloadData()
     }
 }

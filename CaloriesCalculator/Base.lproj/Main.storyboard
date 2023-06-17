@@ -12,60 +12,59 @@
         <!--Calories View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="CaloriesViewController" customModule="CaloriesCalculator" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CalorieViewController" id="BYZ-38-t0r" customClass="CaloriesViewController" customModule="CaloriesCalculator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ir0-NG-igx">
-                                <rect key="frame" x="16" y="103" width="361" height="715"/>
+                                <rect key="frame" x="16" y="103" width="361" height="615"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="HJk-Vn-LU5">
-                                        <rect key="frame" x="0.0" y="0.0" width="361" height="48"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="35"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7zu-Uk-F6I">
-                                                <rect key="frame" x="0.0" y="0.0" width="48.666666666666664" height="48"/>
-                                                <string key="text">칼로리 
-소모량</string>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  칼로리(섭취)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7zu-Uk-F6I">
+                                                <rect key="frame" x="0.0" y="0.0" width="84.666666666666671" height="35"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                <color key="textColor" red="0.098124378685040564" green="0.17878605769230768" blue="0.77435243983957225" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 Kcal" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pf5-ET-sA9">
-                                                <rect key="frame" x="107.00000000000001" y="0.0" width="46.666666666666671" height="48"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <rect key="frame" x="122.99999999999999" y="0.0" width="42.333333333333329" height="35"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yPl-0o-gjC">
-                                                <rect key="frame" x="211.66666666666666" y="0.0" width="44.333333333333343" height="48"/>
-                                                <string key="text">목표 
-칼로리</string>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="목표 칼로리" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yPl-0o-gjC">
+                                                <rect key="frame" x="204" y="0.0" width="68.666666666666686" height="35"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                <color key="textColor" red="0.09812437869" green="0.1787860577" blue="0.77435243980000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 Kcal" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Q7-4d-Hqw">
-                                                <rect key="frame" x="314.33333333333331" y="0.0" width="46.666666666666686" height="48"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 Kcal  " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Q7-4d-Hqw">
+                                                <rect key="frame" x="311" y="0.0" width="50" height="35"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                        <color key="backgroundColor" red="0.56616040209790208" green="0.87995948597970663" blue="0.58795891608391604" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstItem="7zu-Uk-F6I" firstAttribute="leading" secondItem="HJk-Vn-LU5" secondAttribute="leading" id="UO8-3K-kvt"/>
-                                            <constraint firstAttribute="height" constant="48" id="b2R-bB-qbu"/>
+                                            <constraint firstAttribute="height" constant="35" id="b2R-bB-qbu"/>
                                             <constraint firstItem="7zu-Uk-F6I" firstAttribute="centerY" secondItem="HJk-Vn-LU5" secondAttribute="centerY" id="dE1-r4-FuT"/>
                                         </constraints>
                                     </stackView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hgo-cN-6ej" customClass="FSCalendar">
-                                        <rect key="frame" x="0.0" y="56" width="361" height="290"/>
+                                        <rect key="frame" x="0.0" y="43" width="361" height="264"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Lc6-Dw-jVA">
-                                        <rect key="frame" x="0.0" y="354" width="361" height="361"/>
+                                        <rect key="frame" x="0.0" y="315" width="361" height="300"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="300" id="1ci-Xs-hj5"/>
+                                        </constraints>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CaloriesCell" textLabel="vyj-TI-e41" detailTextLabel="mYd-2r-SIw" style="IBUITableViewCellStyleValue1" id="M11-ry-nZP" userLabel="CaloriesCell">
                                                 <rect key="frame" x="0.0" y="50" width="361" height="43.666667938232422"/>
@@ -96,25 +95,34 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="HJk-Vn-LU5" firstAttribute="top" secondItem="ir0-NG-igx" secondAttribute="top" id="ZhO-f3-5xm"/>
-                                    <constraint firstItem="Hgo-cN-6ej" firstAttribute="width" secondItem="Lc6-Dw-jVA" secondAttribute="height" multiplier="1:1" id="uKK-Gb-ZkM"/>
+                                    <constraint firstItem="Lc6-Dw-jVA" firstAttribute="leading" secondItem="ir0-NG-igx" secondAttribute="leading" id="cO3-7f-Zpd"/>
+                                    <constraint firstItem="Hgo-cN-6ej" firstAttribute="leading" secondItem="ir0-NG-igx" secondAttribute="leading" id="kE4-Vh-Jh1"/>
+                                    <constraint firstAttribute="trailing" secondItem="Lc6-Dw-jVA" secondAttribute="trailing" id="pNf-XP-SMV"/>
+                                    <constraint firstAttribute="trailing" secondItem="Hgo-cN-6ej" secondAttribute="trailing" id="shk-Hc-ZaJ"/>
                                 </constraints>
                             </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="ir0-NG-igx" secondAttribute="bottom" id="AjU-cJ-L8E"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="ir0-NG-igx" secondAttribute="bottom" constant="100" id="AjU-cJ-L8E"/>
                             <constraint firstItem="ir0-NG-igx" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="hJa-CO-Ech"/>
                             <constraint firstItem="ir0-NG-igx" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="nwq-bt-Qyi"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ir0-NG-igx" secondAttribute="trailing" constant="16" id="s2k-35-b55"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="Zno-6m-wBa"/>
+                    <navigationItem key="navigationItem" id="P5O-To-JKR">
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="vUE-ce-XrA">
+                            <connections>
+                                <action selector="editCalorie:" destination="BYZ-38-t0r" id="0G6-5x-uEC"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="calorieConsumption" destination="Pf5-ET-sA9" id="CFW-2r-VzY"/>
                         <outlet property="caloriesList" destination="Lc6-Dw-jVA" id="2Uz-mF-Os0"/>
                         <outlet property="fsCalendar" destination="Hgo-cN-6ej" id="q1G-df-V5q"/>
-                        <outlet property="targetCalorie" destination="0Q7-4d-Hqw" id="TC6-n2-VnO"/>
+                        <outlet property="targetCalorie" destination="0Q7-4d-Hqw" id="buP-w7-cnp"/>
                         <segue destination="cEf-bR-977" kind="show" identifier="AddCalories" id="Nyb-ck-CBP"/>
                     </connections>
                 </viewController>
@@ -191,7 +199,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kwa-gQ-MLa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2843.5114503816794" y="55.633802816901408"/>
+            <point key="canvasLocation" x="2895" y="56"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="t5q-P9-qt7">
@@ -215,9 +223,6 @@
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemOrangeColor">
-            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
