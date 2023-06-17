@@ -396,7 +396,7 @@ extension CaloriesViewController {
 //                print(">> target Calorie: \(target["calorie"])")
                 if let calorie = document.data()?["calorie"] as? String {
                     print("Calorie: \(calorie)")
-                    self.targetCalorie.text = "\(calorie) Kcal"
+                    self.targetCalorie.text = "\(calorie) Kcal  "
                 } else {
                     print("해당 필드가 없거나 문자열 형태가 아님")
                 }
@@ -530,25 +530,63 @@ extension CaloriesViewController {
         let section = indexPath.section
         let sectionTitle = self.tableView(tableView, titleForHeaderInSection: section)
         
+        // 해당 셀의 음식이름과 칼로리 가져오기
+        let deletedCell: [String: String]!
+        
         if sectionTitle == "아침" {
+            deletedCell = morningList[indexPath.row]
             morningList.remove(at: indexPath.row)
         } else if sectionTitle == "점심" {
+            deletedCell = morningList[indexPath.row]
             lunchList.remove(at: indexPath.row)
         } else {
+            deletedCell = morningList[indexPath.row]
             dinnerList.remove(at: indexPath.row)
         }
         
         // 파이어베이스에서 삭제
-        let documentRef = db.document("\(String(describing: formattedDate))/\(String(describing: sectionTitle))")
-
-        // 문서 삭제
-        documentRef.delete { error in
-            if let error = error {
-                print("문서 삭제 실패: \(error)")
+        let documentRef = db.collection(formattedDate).document(sectionTitle!)
+        
+        documentRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                if var foodsArr = document.data()?["foods"] as? [String], var caloriesArr = document.data()?["calories"] as? [String], let calorieTotal = document.data()?["calorieTotal"] as? String {
+                    
+                    let extractCalorieTotal = calorieTotal.replacingOccurrences(of: " Kcal", with: "")
+                    let extractDeletedCell = deletedCell["calorie"]!.replacingOccurrences(of: " Kcal", with: "")
+                    
+                    if let calorieTotal = Double(extractCalorieTotal), let calorie = Double(extractDeletedCell) {
+                        foodsArr.removeAll { $0 == deletedCell["food"] }
+                        caloriesArr.removeAll { $0 == deletedCell["calorie"] }
+                        let updatedCalorieTotal = calorieTotal - calorie
+                        let resCalorie = String(format: "%.2f", updatedCalorieTotal)
+                        
+                        // 칼로리 소모량도 업데이트
+                        let curTotal = self.calorieConsumption.text!
+                        let extractCurTotal = curTotal.replacingOccurrences(of: " Kcal", with: "")
+                        self.calorieConsumption.text = "\(Double(extractCurTotal)! - calorie)"
+                        
+                        // 지운 내용 업데이트
+                        let updateData = [
+                            "foods": foodsArr,
+                            "calories": caloriesArr,
+                            "calorieTotal": resCalorie + " Kcal"
+                        ]
+                        documentRef.updateData(updateData) { (error) in
+                            if let error = error {
+                                print("지운 내용 업데이트 실패: \(error.localizedDescription)")
+                            } else {
+                                print("지운 내용 업데이트 성공")
+                            }
+                        }
+                    } else {
+                        print("변환 실패")
+                    }
+                }
             } else {
-                print("문서 삭제 성공")
+                print("문서를 찾을 수 없음")
             }
         }
+        // 피이어베이스에서 삭제 끝
         
         if editingStyle == .delete {
             caloriesList.deleteRows(at: [indexPath], with: .fade)
