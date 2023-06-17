@@ -19,6 +19,8 @@ class AddCalorieViewController: UIViewController, UISearchBarDelegate, UITableVi
     var time: String?
     var isFiltering: Bool = false
     var foodList: [[String: String]] = []
+    var foodArr: [String] = [] // 파이어베이스에 저장할 음식 이름 배열
+    var calorieArr: [String] = [] // 파이어베이스에 저장할 칼로리 배열
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var searchTableView: UITableView!
@@ -103,12 +105,8 @@ extension AddCalorieViewController {
     
     func showFoodList(_ rows: [[String: Any]]) {
         foodList = rows.compactMap { row in
-            guard let foodName = row["DESC_KOR"] as? String else {
-                return nil
-            }
-            guard let calorie = row["NUTR_CONT1"] as? String else {
-                return nil
-            }
+            guard let foodName = row["DESC_KOR"] as? String else { return nil }
+            guard let calorie = row["NUTR_CONT1"] as? String else { return nil }
             
             return ["foodName": foodName, "calorie": calorie]
         }
@@ -150,32 +148,45 @@ extension AddCalorieViewController {
             if let foodName = selectedCell?.textLabel?.text, let calorie = selectedCell?.detailTextLabel?.text {
                 print("선택한 셀의 음식이름: \(foodName)")
                 print("선택한 셀의 칼로리: \(calorie)")
+                
+                self.foodArr.append(foodName)
+                self.calorieArr.append(calorie)
+                
+                // 파이어베이스에 문서 없는 경우, 초기 세팅
                 let data: [String: Any] = [
-                    "calorie": calorie
+                    "foods": self.foodArr,
+                    "calories": self.calorieArr,
+                    "calorieTotal": calorie
                 ]
                 
                 let date = "\(self.month!)월 \(self.day!)일"
                 let documentRef = self.db.collection(date).document(self.title!)
                 documentRef.getDocument { (document, error) in
-                    // 문서 이미 존재하면, 기존 칼로리에 더함
+                    // 문서 이미 존재하면, 기존 칼로리에 더함 (칼로리 총합)
                     if let document = document, document.exists {
-                        print("가져온 칼로리: \(document.data()?["calorie"] as! String)")
-                        if let existCalorie = document.data()?["calorie"] as? String {
-                            let extractExistCalorie = existCalorie.replacingOccurrences(of: " Kcal", with: "")
+                        if var foodArr = document.data()?["foods"] as? [String], var calorieArr = document.data()?["calories"] as? [String], let calorieTotal = document.data()?["calorieTotal"] as? String {
+                            
+                            foodArr.append(foodName)
+                            calorieArr.append(calorie)
+                            
+                            let extractCalorieTotal = calorieTotal.replacingOccurrences(of: " Kcal", with: "")
                             let extractSearchedCalorie = calorie.replacingOccurrences(of: " Kcal", with: "")
-                            if let existCalorieDouble = Double(extractExistCalorie), let searchedCalorie = Double(extractSearchedCalorie) {
-                                var currentCalorie = existCalorieDouble + searchedCalorie
+                            if let existCalorieTotalDouble = Double(extractCalorieTotal), let searchedCalorie = Double(extractSearchedCalorie) {
+                                let currentCalorie = existCalorieTotalDouble + searchedCalorie
                                 print("선택한 칼로리: \(searchedCalorie)")
                                 print("더한 칼로리: \(currentCalorie)")
                                 let resCalorie = String(format: "%.2f", currentCalorie)
                                 let calorieVal = resCalorie + " Kcal"
-                                documentRef.updateData(["calorie": calorieVal]) { error in
-                                    if let error = error {
-                                        print("칼로리 더하기 실패: \(error)")
-                                    } else {
-                                        print("칼로리 더하기 성공")
+                                documentRef.updateData([
+                                    "foods": foodArr,
+                                    "calories": calorieArr,
+                                    "calorieTotal": calorieVal]) { error in
+                                        if let error = error {
+                                            print("칼로리 더하기 실패: \(error)")
+                                        } else {
+                                            print("칼로리 더하기 성공")
+                                        }
                                     }
-                                }
                             } else {
                                 print("칼로리 double 형 변환 실패")
                             }
@@ -192,8 +203,9 @@ extension AddCalorieViewController {
                 }
             }
             
-            self.navigationController?.popViewController(animated: true)
+            self.navigationController?.popViewController(animated: true) // 이전 화면으로 이동
         }))
+        
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel))
         
         // 액션시트 표시

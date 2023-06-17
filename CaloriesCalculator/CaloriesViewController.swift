@@ -7,13 +7,20 @@
 
 import UIKit
 import FSCalendar
+import Firebase
 
-class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendarDelegate {
+class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendarDelegate, UITableViewDelegate {
 
     @IBOutlet weak var calorieConsumption: UILabel!
     @IBOutlet weak var targetCalorie: UILabel!
     @IBOutlet weak var fsCalendar: FSCalendar!
     @IBOutlet weak var caloriesList: UITableView!
+    
+    var data: [(foodName: String, calorie: String)] = [] // AddCalorieVC 에 전달할 데이터 저장
+    var foodTable: [[String: String]] = []
+    var foodName: String?
+    var calorie: String?
+    let db = Firestore.firestore()
     
     private var animation: UIViewPropertyAnimator?
     
@@ -21,12 +28,40 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
         super.viewDidLoad()
         fsCalendar.dataSource = self
         fsCalendar.delegate = self
+        caloriesList.delegate = self
         
         setUI() // 플로팅 버튼 세팅
         
         morningBtn.addTarget(self, action: #selector(morningBtnTapped), for: .touchUpInside)
         lunchBtn.addTarget(self, action: #selector(lunchBtnTapped), for: .touchUpInside)
         dinnerBtn.addTarget(self, action: #selector(dinnerBtnTapped), for: .touchUpInside)
+    }
+    
+    // 날짜 선택되었을 때 호출
+    func calendar(_ calendar: FSCalendar, didDeselect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        print(">> 데이터 가져오기")
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: date)
+        let day = calendar.component(.day, from: date)
+        let formattedDate = "\(month)월 \(day)일"
+        
+        let collectionRef = db.collection(formattedDate)
+        collectionRef.document("아침").getDocument { (document, error) in
+            if let error = error {
+                print("문서 가져오기 실패: \(error)")
+                return
+            }
+            
+            if let document = document, document.exists {
+                let data = document.data()
+                print("data: \(data)")
+            } else {
+                print("문서가 존재하지 않습니다.")
+            }
+        }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        self.viewWillAppear(true)
     }
 
     private lazy var floatingButton: UIButton = {
@@ -101,20 +136,52 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
     
     @objc private func morningBtnTapped() {
         print("아침 버튼 눌림")
-        let date = fsCalendar.selectedDate // 선택한 날짜
-        performSegue(withIdentifier: "AddCalories", sender: (date, "아침"))
+        if let date = fsCalendar.selectedDate {
+//            performSegue(withIdentifier: "AddCalories", sender: (date, "아침"))
+            if let addCalorieVC = storyboard?.instantiateViewController(withIdentifier: "AddCalorieViewController") as? AddCalorieViewController {
+                addCalorieVC.selectedDate = date
+                addCalorieVC.title = "아침"
+                
+                navigationController?.pushViewController(addCalorieVC, animated: true)
+            }
+        } else { // 날짜를 선택하지 않은 경우 알림창 띄우기
+            let alertController = UIAlertController(title: "알림", message: "날짜를 선택해주세요!", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "확인", style: .default))
+            present(alertController, animated: true, completion: nil)
+        }
     }
     
     @objc private func lunchBtnTapped() {
         print("점심 버튼 눌림")
-        let date = fsCalendar.selectedDate // 선택한 날짜
-        performSegue(withIdentifier: "AddCalories", sender: (date, "점심"))
+        if let date = fsCalendar.selectedDate {
+//            performSegue(withIdentifier: "AddCalories", sender: (date, "점심"))
+            if let addCalorieVC = storyboard?.instantiateViewController(withIdentifier: "AddCalorieViewController") as? AddCalorieViewController {
+                addCalorieVC.selectedDate = date
+                addCalorieVC.title = "점심"
+                navigationController?.pushViewController(addCalorieVC, animated: true)
+            }
+        } else {
+            let alertController = UIAlertController(title: "알림", message: "날짜를 선택해주세요!", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "확인", style: .default))
+            present(alertController, animated: true, completion: nil)
+        }
     }
     
     @objc private func dinnerBtnTapped() {
         print("저녁 버튼 눌림")
-        let date = fsCalendar.selectedDate // 선택한 날짜
-        performSegue(withIdentifier: "AddCalories", sender: (date, "저녁"))
+        if let date = fsCalendar.selectedDate {
+//            performSegue(withIdentifier: "AddCalories", sender: (date, "저녁"))
+            if let addCalorieVC = storyboard?.instantiateViewController(withIdentifier: "AddCalorieViewController") as? AddCalorieViewController {
+                addCalorieVC.selectedDate = date
+                addCalorieVC.title = "저녁"
+                
+                navigationController?.pushViewController(addCalorieVC, animated: true)
+            }
+        } else {
+            let alertController = UIAlertController(title: "알림", message: "날짜를 선택해주세요!", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "확인", style: .default))
+            present(alertController, animated: true, completion: nil)
+        }
     }
 
     @objc private func tapFloatingBtn() {
@@ -189,20 +256,35 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
         animation.fillMode = .forwards
         animation.isRemovedOnCompletion = false
         floatingButton.layer.add(animation, forKey: nil)
-    }    
+    }
     
 }
 
+// 콜백 처리 메서드
 extension CaloriesViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "AddCalories" {
-            if let destinationVC = segue.destination as? AddCalorieViewController {
-                if let data = sender as? (Date, String) {
-                    destinationVC.selectedDate = data.0
-                    destinationVC.title = data.1
-                    print("선택한 날짜: \(data.0)")
-                }
-            }
-        }
+    func handleDataFromAddCalorieVC(_ data: (String, String)) {
+        let (_, _) = data
+    }
+}
+
+//extension CaloriesViewController {
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "AddCalories" {
+//            if let navigationController = segue.destination as? UINavigationController,
+//               let destinationVC = segue.destination as? AddCalorieViewController {
+//            }
+//        }
+//    }
+//}
+
+extension CaloriesViewController {
+    // 테이블 셀에 해당 날짜에 추가한 내용들 보이기
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CaloriesCell")!
+        let data = data[indexPath.row]
+        cell.textLabel?.text = data.foodName
+        cell.detailTextLabel?.text = data.calorie
+        
+        return cell
     }
 }
