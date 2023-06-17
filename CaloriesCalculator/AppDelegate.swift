@@ -16,7 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure() // 연결 시작
-        Firestore.firestore().collection("test").document("key").setData(["test1": "테스트"])
+        // 연결 확인용
+//        Firestore.firestore().collection("test").document("key").setData(["test1": "테스트"])
         return true
     }
 

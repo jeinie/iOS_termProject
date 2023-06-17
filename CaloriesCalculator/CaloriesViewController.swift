@@ -9,7 +9,7 @@ import UIKit
 import FSCalendar
 import Firebase
 
-class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendarDelegate, UITableViewDelegate {
+class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendarDelegate, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var calorieConsumption: UILabel!
     @IBOutlet weak var targetCalorie: UILabel!
@@ -20,6 +20,10 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
     var foodTable: [[String: String]] = []
     var foodName: String?
     var calorie: String?
+    var formattedDate: String!
+    var morningList: [[String: String]] = [] // 아침에 먹은 음식 리스트
+    var lunchList: [[String: String]] = [] // 점심에 먹은 음식 리스트
+    var dinnerList: [[String: String]] = [] // 저녁에 먹은 음식 리스트
     let db = Firestore.firestore()
     
     private var animation: UIViewPropertyAnimator?
@@ -29,39 +33,189 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
         fsCalendar.dataSource = self
         fsCalendar.delegate = self
         caloriesList.delegate = self
+        caloriesList.dataSource = self
         
         setUI() // 플로팅 버튼 세팅
         
         morningBtn.addTarget(self, action: #selector(morningBtnTapped), for: .touchUpInside)
         lunchBtn.addTarget(self, action: #selector(lunchBtnTapped), for: .touchUpInside)
         dinnerBtn.addTarget(self, action: #selector(dinnerBtnTapped), for: .touchUpInside)
-    }
-    
-    // 날짜 선택되었을 때 호출
-    func calendar(_ calendar: FSCalendar, didDeselect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        print(">> 데이터 가져오기")
-        let calendar = Calendar.current
-        let month = calendar.component(.month, from: date)
-        let day = calendar.component(.day, from: date)
-        let formattedDate = "\(month)월 \(day)일"
         
+        // 앱이 실행되면 오늘 날짜의 데이터를 가져오기
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: Date())
+        let day = calendar.component(.day, from: Date())
+        
+        let formattedDate = "\(month)월 \(day)일"
         let collectionRef = db.collection(formattedDate)
-        collectionRef.document("아침").getDocument { (document, error) in
+        
+        // "아침", "점심", "저녁" 한꺼번에 가져오기
+        let query = collectionRef.whereField(FieldPath.documentID(), in: ["아침", "점심", "저녁"])
+        query.getDocuments { (snapShot, error) in
             if let error = error {
                 print("문서 가져오기 실패: \(error)")
                 return
             }
             
-            if let document = document, document.exists {
-                let data = document.data()
-                print("data: \(data)")
-            } else {
+            guard let documents = snapShot?.documents else {
                 print("문서가 존재하지 않습니다.")
+                return
+            }
+            
+            for document in documents {
+                let documentID = document.documentID
+                let data = document.data()
+                
+                if let foods = data["foods"] as? [String], let calories = data["calories"] as? [String] {
+                    for index in 0..<foods.count {
+                        let foodName = foods[index]
+                        let calorie = calories[index]
+                        let item: [String: String] = [
+                            "food": foodName,
+                            "calorie": calorie
+                        ]
+                        if documentID == "아침" {
+                            self.morningList.append(item)
+                        } else if documentID == "점심" {
+                            self.lunchList.append(item)
+                        } else {
+                            self.dinnerList.append(item)
+                        }
+                    }
+                    print("morningList = \(self.morningList)")
+                    print("lunchList = \(self.lunchList)")
+                    print("dinnerList = \(self.morningList)")
+                }
+            }
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.caloriesList.reloadData()
             }
         }
     }
+    
     override func viewWillAppear(_ animated: Bool) {
-        self.viewWillAppear(true)
+        super.viewWillAppear(animated)
+        // 각 리스트 초기화
+        morningList = []
+        lunchList = []
+        dinnerList = []
+        
+        print(">> 다시 옴?")
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: Date())
+        let day = calendar.component(.day, from: Date())
+        formattedDate = "\(month)월 \(day)일"
+        
+        print("선택된 날짜: \(formattedDate)")
+        let collectionRef = db.collection(formattedDate)
+        
+        // "아침", "점심", "저녁" 한꺼번에 가져오기
+        let query = collectionRef.whereField(FieldPath.documentID(), in: ["아침", "점심", "저녁"])
+        query.getDocuments { (snapShot, error) in
+            if let error = error {
+                print("문서 가져오기 실패: \(error)")
+                return
+            }
+            
+            guard let documents = snapShot?.documents else {
+                print("문서가 존재하지 않습니다.")
+                return
+            }
+            
+            for document in documents {
+                let documentID = document.documentID
+                let data = document.data()
+                
+                if let foods = data["foods"] as? [String], let calories = data["calories"] as? [String] {
+                    for index in 0..<foods.count {
+                        let foodName = foods[index]
+                        let calorie = calories[index]
+                        let item: [String: String] = [
+                            "food": foodName,
+                            "calorie": calorie
+                        ]
+                        if documentID == "아침" {
+                            self.morningList.append(item)
+                        } else if documentID == "점심" {
+                            self.lunchList.append(item)
+                        } else {
+                            self.dinnerList.append(item)
+                        }
+                    }
+                    print("morningList = \(self.morningList)")
+                    print("lunchList = \(self.lunchList)")
+                    print("dinnerList = \(self.morningList)")
+                }
+            }
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.caloriesList.reloadData()
+            }
+        }
+    }
+
+    
+    // 날짜 선택되었을 때 호출
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        
+        // 각 리스트 초기화
+        morningList = []
+        lunchList = []
+        dinnerList = []
+        
+        print(">> 데이터 가져오기")
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: date)
+        let day = calendar.component(.day, from: date)
+        formattedDate = "\(month)월 \(day)일"
+        
+        print("선택된 날짜: \(formattedDate)")
+        let collectionRef = db.collection(formattedDate)
+        
+        // "아침", "점심", "저녁" 한꺼번에 가져오기
+        let query = collectionRef.whereField(FieldPath.documentID(), in: ["아침", "점심", "저녁"])
+        query.getDocuments { (snapShot, error) in
+            if let error = error {
+                print("문서 가져오기 실패: \(error)")
+                return
+            }
+            
+            guard let documents = snapShot?.documents else {
+                print("문서가 존재하지 않습니다.")
+                return
+            }
+            
+            for document in documents {
+                let documentID = document.documentID
+                let data = document.data()
+                
+                if let foods = data["foods"] as? [String], let calories = data["calories"] as? [String] {
+                    for index in 0..<foods.count {
+                        let foodName = foods[index]
+                        let calorie = calories[index]
+                        let item: [String: String] = [
+                            "food": foodName,
+                            "calorie": calorie
+                        ]
+                        if documentID == "아침" {
+                            self.morningList.append(item)
+                        } else if documentID == "점심" {
+                            self.lunchList.append(item)
+                        } else {
+                            self.dinnerList.append(item)
+                        }
+                    }
+                    print("morningList = \(self.morningList)")
+                    print("lunchList = \(self.lunchList)")
+                    print("dinnerList = \(self.morningList)")
+                }
+            }
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.caloriesList.reloadData()
+            }
+        }
     }
 
     private lazy var floatingButton: UIButton = {
@@ -260,13 +414,6 @@ class CaloriesViewController: UIViewController, FSCalendarDataSource, FSCalendar
     
 }
 
-// 콜백 처리 메서드
-extension CaloriesViewController {
-    func handleDataFromAddCalorieVC(_ data: (String, String)) {
-        let (_, _) = data
-    }
-}
-
 //extension CaloriesViewController {
 //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 //        if segue.identifier == "AddCalories" {
@@ -278,12 +425,61 @@ extension CaloriesViewController {
 //}
 
 extension CaloriesViewController {
+    /* 테이블 뷰 섹션 */
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3 // 아침, 점심, 저녁 섹션 3개
+    }
+    
+    // 섹션 헤더 타이틀 설정
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return "아침"
+        } else if section == 1 {
+            return "점심"
+        } else {
+            return "저녁"
+        }
+    }
+    
+    // 섹션 타이틀 배경색 설정
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        view.tintColor = .lightGray
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // 아침, 점심, 저녁 섹션 별로 행 개수 반환
+        if section == 0 {
+            return morningList.count
+        } else if section == 1 {
+            return lunchList.count
+        } else {
+            return dinnerList.count
+        }
+    }
+    
     // 테이블 셀에 해당 날짜에 추가한 내용들 보이기
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CaloriesCell")!
-        let data = data[indexPath.row]
-        cell.textLabel?.text = data.foodName
-        cell.detailTextLabel?.text = data.calorie
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CaloriesCell", for: indexPath)
+        if indexPath.section == 0 {
+            let data = morningList[indexPath.row]
+            let foodName = data["food"]
+            let calorie = data["calorie"]
+            print("셀에 보여야 할 내용: \(foodName), \(calorie)")
+            cell.textLabel?.text = foodName
+            cell.detailTextLabel?.text = calorie
+        } else if indexPath.section == 1 {
+            let data = lunchList[indexPath.row]
+            let foodName = data["food"]
+            let calorie = data["calorie"]
+            cell.textLabel?.text = foodName
+            cell.detailTextLabel?.text = calorie
+        } else {
+            let data = dinnerList[indexPath.row]
+            let foodName = data["food"]
+            let calorie = data["calorie"]
+            cell.textLabel?.text = foodName
+            cell.detailTextLabel?.text = calorie
+        }
         
         return cell
     }
