@@ -537,10 +537,10 @@ extension CaloriesViewController {
             deletedCell = morningList[indexPath.row]
             morningList.remove(at: indexPath.row)
         } else if sectionTitle == "점심" {
-            deletedCell = morningList[indexPath.row]
+            deletedCell = lunchList[indexPath.row]
             lunchList.remove(at: indexPath.row)
         } else {
-            deletedCell = morningList[indexPath.row]
+            deletedCell = dinnerList[indexPath.row]
             dinnerList.remove(at: indexPath.row)
         }
         
@@ -563,7 +563,14 @@ extension CaloriesViewController {
                         // 칼로리 소모량도 업데이트
                         let curTotal = self.calorieConsumption.text!
                         let extractCurTotal = curTotal.replacingOccurrences(of: " Kcal", with: "")
-                        self.calorieConsumption.text = "\(Double(extractCurTotal)! - calorie)"
+                        if let total = Double(extractCurTotal) {
+                            let deleted = total - calorie
+                            let resTotal = String(format: "%.2f", deleted)
+                            self.calorieConsumption.text = resTotal + " Kcal"
+                            print("지우기 전 칼로리 소모량: \(curTotal)")
+                            print("삭제된 셀의 칼로리: \(calorie)")
+                            print("지운 후 칼로리 소모량: \(resTotal)")
+                        }
                         
                         // 지운 내용 업데이트
                         let updateData = [
@@ -586,7 +593,6 @@ extension CaloriesViewController {
                 print("문서를 찾을 수 없음")
             }
         }
-        // 피이어베이스에서 삭제 끝
         
         if editingStyle == .delete {
             caloriesList.deleteRows(at: [indexPath], with: .fade)
