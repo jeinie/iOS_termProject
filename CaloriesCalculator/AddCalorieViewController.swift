@@ -86,6 +86,8 @@ extension AddCalorieViewController {
             
             guard let jsonData = data else { print(error!); return }
             do {
+                print(">> 데이터 응답 결과")
+                print("json: \(jsonData)")
                 if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
                    let i2790 = json["I2790"] as? [String: Any],
                    let rows = i2790["row"] as? [[String: Any]] {
@@ -203,9 +205,7 @@ extension AddCalorieViewController {
                 }
             }
             
-            if let calorieVC = self.storyboard?.instantiateViewController(withIdentifier: "CalorieViewController") as? CaloriesViewController {
-                self.navigationController?.pushViewController(calorieVC, animated: true)
-            }
+            self.navigationController?.popViewController(animated: true)
         }))
         
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel))
